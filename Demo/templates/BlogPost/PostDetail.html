@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} {{ post.title }} {% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-sm bg-dark">
+   <ul class="navbar-nav text-center" style="width:100%;">
+    <li class="nav-item">
+        <a href="/home"><img src="{% static 'Image/logo.png' %}" class="rounded-circle" width="40%"> </a>
+    </li>
+      <li class="nav-item dropdown">
+           <button class="btn btn-primary bg-white nav-link dropdown-toggle" data-toggle="dropdown" style="margin:0 auto;color:black;font-family: 华文新魏;font-size:1.2rem;">{{ user.username }}</button>
+          <div class="dropdown-menu text-center">
+              <a class="dropdown-item" href="{% url 'account:password_change' %}">修改密码</a>
+              <a class="dropdown-item" href="{% url 'account:logout' %}">退出登陆</a>
+           <a class="dropdown-item" href="{% url 'BlogPost:PostManage' %}">后台管理</a>
+              <a class="dropdown-item" href="#">个人信息</a>
+          </div>
+       </li>
+  <li class="nav-item">
+      <a class="nav-link" href="/home"><p>首页</p></a>
+    </li>
+   <li class="nav-item">
+      <a class="nav-link" href="{% url 'BlogPost:PostManage' %}"><p>文章管理</p></a>
+    </li>
+       <li class="nav-item">
+      <a class="nav-link" href="{% url 'BlogPost:ColumnManage' %}"><p>栏目管理</p></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="javascript:" onclick="functionDoesNotbuild()"><p>美图页面</p></a>
+    </li>
+  </ul>
+</nav>
+
+{% endblock %}
+{% block content %}
+<div class="row my-content">
+<div class="left-side col-5 col-sm-5 col-md-2"  style="margin:10px">
+    <ul class="nav">
+    <li class="nav-item text-center">
+      <a class="nav-link disabled" href="#">文章查看</a>
+    </li>
+  </ul>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-2" style="margin:10px">
+    </div>
+    <div class="col-12 col-sm-12 col-md-9" style="margin:10px">
+        <div>
+            <header>
+                <h1>{{ post.title }}</h1>
+                <p>作者:{{ post.author.username }}</p>
+            </header>
+            <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.css' %}">
+            <div id="editormd-view">
+                <textarea id="append-test" style="display: none;">
+                    {{ post.body }}
+                </textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/OwnCss.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/lib/marked.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/lib/prettify.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/lib/raphael.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/lib/underscore.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/lib/sequence-diagram.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/lib/flowchart.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/lib/jquery.flowchart.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/editormd.js' %}"></script>
+
+<script type="text/javascript">
+
+    $(function () {
+        editormd.markdownToHTML("editormd-view",{
+            htmlDecode:"style,script,iframe",
+            emoji:true,
+            taskList:true,
+            tex:true,
+            flowChart:true,
+            sequenceDiagram:true,
+        });
+    });
+
+</script>
+{% endblock %}

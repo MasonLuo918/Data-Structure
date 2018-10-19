@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} 文章管理 {% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-sm bg-dark">
+
+  <ul class="navbar-nav text-center" style="width:100%;">
+    <li class="nav-item">
+        <a href="/home"><img src="{% static 'Image/logo.png' %}" class="rounded-circle" width="40%"> </a>
+    </li>
+      <li class="nav-item dropdown">
+           <button class="btn btn-primary bg-white nav-link dropdown-toggle" data-toggle="dropdown" style="margin:0 auto;color:black;font-family: 华文新魏;font-size:1.2rem;">{{ user.username }}</button>
+          <div class="dropdown-menu text-center">
+              <a class="dropdown-item" href="{% url 'account:password_change' %}">修改密码</a>
+              <a class="dropdown-item" href="{% url 'account:logout' %}">退出登陆</a>
+             <a class="dropdown-item" href="{% url 'BlogPost:PostManage' %}">后台管理</a>
+              <a class="dropdown-item" href="#" onclick="functionDoesNotbuild()">个人信息</a>
+          </div>
+       </li>
+<li class="nav-item">
+      <a class="nav-link" href="/home"><p>首页</p></a>
+    </li>
+   <li class="nav-item">
+      <a class="nav-link" href="{% url 'BlogPost:PostManage' %}"><p>文章管理</p></a>
+    </li>
+       <li class="nav-item">
+      <a class="nav-link" href="{% url 'BlogPost:ColumnManage' %}"><p>栏目管理</p></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="javascript:" onclick="functionDoesNotbuild()"><p>美图页面</p></a>
+    </li>
+  </ul>
+
+</nav>
+
+{% endblock %}
+{% block content %}
+<div class="row my-content">
+<div class="left-side col-5 col-sm-5 col-md-2"  style="margin:10px">
+    <ul class="nav flex-column">
+    <li class="nav-item text-center">
+      <a class="nav-link disabled" href="#">文章管理</a>
+    </li>
+  </ul>
+</div>
+<div class="PostManage col-5 col-sm-5 col-md-9"style="margin:10px">
+        <a href="{% url 'BlogPost:PostArticle' %}"><p class="text-right"><button class="btn btn-primary">新增文章</button> </a></p>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-2" style="margin:10px">
+    </div>
+    <div class="col-12 col-sm-12 col-md-9" style="margin:10px">
+        <table class="table table-hover">
+            <tr>
+                <td>序号</td>
+                <td>文章名称</td>
+                <td>发表时间</td>
+                <td>栏目</td>
+                <td>操作</td>
+            </tr>
+            {% for Post in Posts %}
+            <tr>
+                <td>{{ forloop.counter}}</td>
+                <td><a href="{{ Post.get_absolute_url }}">{{ Post.title }}</a></td>
+                <td>{{ Post.publish_time }}</td>
+                <td>{{ Post.column.column }}</td>
+                <td>
+                   <a href="{% url 'BlogPost:edit_post' Post.id %}" name="edit"  style="color:black;font-size:1.2rem;margin-right: 4px;"> <span class="fa fa-pencil-square"></span></a>
+                   <a href="javascript:" name="delete" onclick="delete_post(this,{{ Post.id }})" style="color:black;font-size:1.2rem;margin-left:4px;"> <span class="fa fa-trash"></span></a></td>
+            </tr>
+            {% empty %}
+            <p>赶紧发表你的第一篇文章吧~</p>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/OwnCss.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+<script type="text/javascript">
+    function delete_post(the,post_id) {
+        var title= $(the).parents("tr").children("td").eq(1).text();
+        console.log(title);
+        var index = layer.open({
+            type:1,
+            skin:"layui-layer-rim",
+            area:["400px","150px"],
+            title:"删除文章",
+            content:"<div class='text-center'><p>是否确定删除文章?</p></div>",
+            btn:['确定','取消'],
+            yes:function () {
+                $.ajax({
+                    type:"POST",
+                    data:{"post_id":post_id},
+                    url:"{% url 'BlogPost:delete_post' %}",
+                    success:function (e) {
+                        if (e=="1"){
+                            parent.location.reload();
+                            layer.msg("删除成功");
+                        }
+                        else{
+                            layer.msg("删除失败");
+                        }
+                    },
+                });
+            },
+        });
+    }
+</script>
+{% endblock %}

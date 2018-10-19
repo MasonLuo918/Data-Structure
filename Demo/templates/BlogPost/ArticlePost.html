@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} 文章管理 {% endblock %}
+{% block Style %}
+<link rel="stylesheet" href="{% static 'editor/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/editormd.css' %}">
+{% endblock %}
+{% block header %}
+<nav class="navbar navbar-expand-sm bg-dark">
+  <ul class="navbar-nav text-center" style="width:100%;">
+    <li class="nav-item">
+        <a href="/home"><img src="{% static 'Image/logo.png' %}" class="rounded-circle" width="40%"> </a>
+    </li>
+      <li class="nav-item dropdown">
+           <button class="btn btn-primary bg-white nav-link dropdown-toggle" data-toggle="dropdown" style="margin:0 auto;color:black;font-family: 华文新魏;font-size:1.2rem;">{{ user.username }}</button>
+          <div class="dropdown-menu text-center">
+              <a class="dropdown-item" href="{% url 'account:password_change' %}">修改密码</a>
+              <a class="dropdown-item" href="{% url 'account:logout' %}">退出登陆</a>
+              <a class="dropdown-item" href="{% url 'BlogPost:PostManage' %}">后台管理</a>
+              <a class="dropdown-item" href="#" onclick="functionDoesNotbuild()">个人信息</a>
+          </div>
+       </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/home"><p>首页</p></a>
+    </li>
+   <li class="nav-item">
+      <a class="nav-link" href="{% url 'BlogPost:PostManage' %}"><p>文章管理</p></a>
+    </li>
+       <li class="nav-item">
+      <a class="nav-link" href="{% url 'BlogPost:ColumnManage' %}"><p>栏目管理</p></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="javascript:" onclick="functionDoesNotbuild()"><p>美图页面</p></a>
+    </li>
+  </ul>
+
+</nav>
+
+{% endblock %}
+{% block content %}
+
+<div class="StylePosition">
+    <form>
+        <div class="row text-left group">
+            <div class="col-12 col-sm-12 col-md-1 "><span>标题:</span></div>
+            <div class="col-12 col-sm-12 col-md-3">{{ article_post_form.title }}</div>
+        </div>
+        <div class="row text-left group">
+            <div class="col-12 col-sm-12 col-md-1 "><span>栏目:</span></div>
+            <div class="col-12 col-sm-12 col-md-3">
+                <select id="which_column">
+                    {% for column in article_columns %}
+                    <option value="{{ column.id }}">{{ column.column }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+                 <div class="col-12 col-sm-12 col-md-4"><button type="button" onclick="add_column()">增加栏目</button></div>
+        </div>
+        <div class="row form-group text-left group">
+            <div class="col-12 col-sm-12 col-md-1"><span>内容:</span></div>
+            <div  id="editormd" class="col-12 col-sm-12 col-md-11">
+                <textarea id="id_body" style="display:none"></textarea>
+            </div>
+        </div>
+           <div class="row text-left group">
+                <div class="col-12 col-sm-12 col-md-1"></div>
+            <input type="button" class="btn btn-primary btn-lg" value="发布文章" onclick="publish_article()">
+        </div>
+
+    </form>
+
+</div>
+
+<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/OwnCss.js' %}"></script>
+<script type="text/javascript" src="{% static 'editor/editormd.min.js' %}"></script>
+<script type="text/javascript">
+    $(function () {
+        var editor=editormd("editormd",{
+            width:"100%",
+            height:640,
+            syncScrolling:"single",
+            path: "{% static 'editor/lib/' %}",
+            emoji:true,
+        });
+    });
+
+
+function add_column(){
+        var index = layer.open({
+            type:1,
+            skin:"layui-layer-rim",
+            area:["400px","200px"],
+            content:'<div class="text-center"><p>请输入栏目名称</p><p><input id="id_column"></p></div>',
+            btn:['确定','取消'],
+            btnAlign:"c",
+            yes:function (index,layero) {
+                column_name = $('#id_column').val();
+                console.log(column_name);
+                $.ajax({
+                    url:"{% url 'BlogPost:ColumnManage' %}",
+                    data:{"column":column_name},
+                    type:"POST",
+                    success:function (e) {
+                        if (e=="1"){
+                            layer.msg("增加栏目成功");
+                            parent.location.reload();
+                        }
+                        else{
+                            layer.msg("此栏目已有,请更换名称.");
+                        }
+                    },
+                });
+            },
+            btn2:function (index,layero) {
+                layer.close(index);
+            }
+        });
+    }
+
+</script>
+{% endblock %}
