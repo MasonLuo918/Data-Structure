@@ -21,3 +21,8 @@ class RegisterForm(forms.ModelForm):
         if cd['password'] != cd['password2']:
             raise forms.ValidationError("两个密码输入不一致,请重新输入")
         return cd['password2']
+
+class UserprofileForm(forms.ModelForm):
+    class Meta:
+        model = Userprofile
+        fields = ("motto","HeadImage","WeCheat","School","phone")

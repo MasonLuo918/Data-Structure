@@ -17,7 +17,7 @@
               <a class="dropdown-item" href="{% url 'account:password_change' %}">修改密码</a>
               <a class="dropdown-item" href="{% url 'account:logout' %}">退出登陆</a>
              <a class="dropdown-item" href="{% url 'BlogPost:PostManage' %}">后台管理</a>
-              <a class="dropdown-item" href="#" onclick="functionDoesNotbuild()">个人信息</a>
+              <!--<a class="dropdown-item" href="#" onclick="functionDoesNotbuild()">个人信息</a>-->
           </div>
        </li>
 <li class="nav-item">
@@ -29,6 +29,12 @@
        <li class="nav-item">
       <a class="nav-link" href="{% url 'BlogPost:ColumnManage' %}"><p>栏目管理</p></a>
     </li>
+      <li class="nav-item">
+      <a class="nav-link" href="{% url 'BlogPost:PersonalInformations' %}"><p>个人信息</p></a>
+    </li>
+       <!--<li class="nav-item">-->
+      <!--<a class="nav-link" href="javascript:" onclick="personInformation()"><p>个人信息</p></a>-->
+    <!--</li>-->
     <li class="nav-item">
       <a class="nav-link" href="javascript:" onclick="functionDoesNotbuild()"><p>美图页面</p></a>
     </li>

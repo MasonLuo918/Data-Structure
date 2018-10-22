@@ -35,3 +35,16 @@ function publish_article() {
 function functionDoesNotbuild() {
       layer.msg("功能正在开发中，敬请期待！");
 }
+
+function personInformation() {
+      var index=layer.open({
+          type:2,
+          content:'/BlogPost/PersonalInformations',
+          area:["350px","400px"],
+          btn:["确定"],
+          btnAlign:"c",
+          yes:function (index,layero) {
+              layer.close(index);
+          }
+      });
+}

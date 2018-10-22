@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} 个人信息 {% endblock %}
+{% block Style %}
+<link rel="stylesheet" href="{% static 'editor/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/editormd.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row" style="margin-top:10px;">
+        <div class="left-side col-md-3 col-sm-12 col-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-dark table-hover " style="margin-top:10px;">
+                        <tbody>
+                        <tr>
+                            <td>用户名</td>
+                            <td>{{ user.username }}</td>
+                        </tr>
+                        <tr>
+                            <td>邮箱</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>座右铭</td>
+                            <td><input id="id_motto" name="motto" value="{{ userprofile.motto }}" style="width:80%;"> </td>
+                        </tr>
+                        <tr>
+                            <td>学校</td>
+                            <td><input id="id_School" name="School" value="{{ userprofile.School }}" style="width:80%;" ></td>
+                        </tr>
+                        <tr>
+                            <td>手机号码</td>
+                            <td><input id="id_phone" name="phone" value="{{ userprofile.phone }}" style="width:80%;"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="col-md-12 btn btn-primary" onclick="submit()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+<script type="text/javascript">
+    function submit() {
+        var motto=$("#id_motto").val();
+        var school=$("#id_School").val();
+        var phone=$("#id_phone").val();
+        $.ajax({
+            type:"POST",
+            data:{"motto":motto,"school":school,"phone":phone},
+            url:"{% url 'BlogPost:EditInformations' %}",
+            success:function (e) {
+                if (e=="1"){
+                    parent.location.reload();
+                }
+                else
+                {
+                    layer.msg("修改失败，请重试。");
+                }
+            },
+        });
+    }
+</script>
+{% endblock %}

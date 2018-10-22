@@ -17,11 +17,15 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from Home import views as Home_views
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
     url(r'^account/',include("account.urls")),
     url(r'^pwd_reset/',include("password_reset.urls",namespace="pwd_reset",app_name="pwd_reset")),
     url(r'^BlogPost/',include("BlogPost.urls")),# import the BlogPost app
+    url(r'^home/',Home_views.index,name="index"),
+    url(r'^Article/',include("Articleapp.urls",namespace="Articleapp",app_name="Articleapp")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

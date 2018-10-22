@@ -12,4 +12,7 @@ urlpatterns = [
     url(r'^delete-post/$',BlogPost_views.delete_post,name="delete_post"),
     url(r'^Post_detail/(?P<id>\d+)/(?P<slug>[-\w]+)/$',BlogPost_views.Post_detail,name="Post_detail"),
     url(r'^edit_post/(?P<post_id>\d+)/$',BlogPost_views.edit_post,name="edit_post"),
+    url(r'^PersonalInformations/$',BlogPost_views.PersonalInformations,name="PersonalInformations"),
+    url(r'^EditInformations/$',BlogPost_views.EditInformations,name="EditInformations"),
+
 ]

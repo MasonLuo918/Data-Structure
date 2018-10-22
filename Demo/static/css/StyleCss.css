@@ -1,3 +1,7 @@
+*{
+    margin:0;
+    padding:0;
+}
 nav{
     width:100%;
     box-shadow:10px 10px 5px #bbb;
@@ -33,4 +37,102 @@ nav ul li p
 }
 .group{
     margin:10px 10px;
+}
+.ArticleList{
+
+    margin:0;
+    font-family: 宋体;
+
+}
+.ArticleList h5
+{
+    background-color: #ededed;
+    margin-top:2px;
+    margin-bottom:2px;
+}
+
+.ArticleList span a
+{
+    font-size:1.0rem;
+    font-weight:lighter;
+    text-decoration: none;
+}
+hr { font-size:0px; line-height:0px; padding:0px; margin:0px; }
+.author-date
+{
+    font-size:0.8rem;
+    color:#ADD8E6;
+    font-weight: lighter;
+}
+.abstract{
+    color:#9DA4A9;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+.text-item
+{
+    margin:auto 0;
+    padding:0;
+}
+.text-item a
+{
+    color:white;
+    font-family: 华文行楷;
+    font-size:1.4rem;
+    text-decoration: none;
+
+}
+.dropdown-menu a
+{
+    color: black;
+}
+.Article
+{
+   border:1px black;
+    border-style: outset;
+    border-radius: 8px;
+    margin:4px;
+    /*box-shadow: 5px 5px 0 #87CEEB;*/
+}
+.Article:hover
+{
+    font-family: 华文行楷;
+    font-size:1.2rem;
+    background-color:#ededed;
+
+}
+.MoreArticle{
+    margin:4px;
+    font-size:1.2rem;
+}
+.ArticleArea
+{
+  border:2px inset #6a9fb5;
+    border-radius: 10px;
+     margin-left:5px;
+    font-size:1.0rem;
+}
+.ArticleArea header
+{
+    background-color: white;
+    font-family: 楷体;
+}
+.ArticleArea header h2
+{
+    font-weight:bolder;
+}
+
+.ArticleArea header p
+{
+    color:#D6D6D6;
+}
+.ArticleArea footer
+{
+     color:#D6D6D6;
+}
+.author-name
+{
+    margin:5% 5% 0 5%;
+    font-size:1.2rem;
+    font-family: 华文新魏;
 }

@@ -4,6 +4,8 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from .forms import PostForm,ColumnForm
 from .models import Post,Column
+from account.models import Userprofile
+from account.forms import UserprofileForm
 from django.http import HttpResponse,HttpResponseRedirect
 # Create your views here.
 
@@ -112,6 +114,30 @@ def edit_post(request,post_id):
             article.title = title
             article.body = body
             article.save()
+            return HttpResponse("1")
+        except:
+            return HttpResponse("2")
+@login_required(login_url='/account/login/')
+@csrf_exempt
+def PersonalInformations(request):
+    userprofile = Userprofile.objects.get(user=request.user)
+    Articles = Post.objects.filter(author=request.user)
+    return render(request,"BlogPost/PersonalInformations.html",{"userprofile":userprofile,"Articles":Articles})
+
+def EditInformations(request):
+    if request.method == "GET":
+        userprofile = Userprofile.objects.get(user=request.user)
+        return render(request,"BlogPost/EditInformations.html",{"userprofile":userprofile})
+    if request.method == "POST":
+        try:
+            motto = request.POST['motto']
+            school = request.POST['school']
+            phone = request.POST['phone']
+            userprofile = Userprofile.objects.get(user=request.user)
+            userprofile.motto = motto
+            userprofile.School = school
+            userprofile.phone = phone
+            userprofile.save()
             return HttpResponse("1")
         except:
             return HttpResponse("2")

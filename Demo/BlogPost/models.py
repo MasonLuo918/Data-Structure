@@ -16,10 +16,11 @@ class Column(models.Model):
 
 class Post(models.Model):
 
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=40)
     body = models.TextField()
     author = models.ForeignKey(User,related_name="UserPost")
     column = models.ForeignKey(Column,related_name="Post_Column",default='')
+    abstract = models.CharField(max_length=200,null=True)
     publish_time = models.DateField(auto_now_add=True)
     modify_time = models.DateField(auto_now=True)
     slug = models.SlugField(max_length=500,blank=True)
@@ -29,11 +30,16 @@ class Post(models.Model):
 
     def save(self,*args,**kwargs):
         self.slug = slugify(self.title)
+        self.abstract = "  "  + self.body[:190]
+        self.abstract += ".."
         super(Post,self).save(*args,**kwargs)
-
     def get_absolute_url(self):
         return reverse("BlogPost:Post_detail",args=[self.id,self.slug])
+
+    def get_detail_url(self):
+        return reverse("Articleapp:ArticleDetail",args=[self.id,self.slug])
 
     class Meta:
         ordering = ("-publish_time","title")
         index_together = (("id","slug"),)
+

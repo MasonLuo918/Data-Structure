@@ -1,10 +1,9 @@
 {% load staticfiles %}
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark d-flex flex-row bg-secondary" style="padding:0;">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark d-flex flex-row bg-secondary" style="padding:0; ">
     <div class="nav-left p-2" style="width:20%;">
     <a class="navbar-brand" href="/home/">
-        <img class="img-fluid rounded-circle" src="{% static 'Image/ScauLogo.jpg' %}" alt="logo" style="width: 100px; height: 50px;">
-         <img class="img-fluid rounded-circle" src="{% static 'Image/DangLogo.png' %}" alt="logo" style="width: 75px; height: 50px;">
+        <img class="img-fluid rounded-circle" src="{% static 'Image/logo.png' %}" alt="logo" style="width: 100px; height: 50px;">
     </a>
        </div>
     <div class="nav-right" style="width:75%;">
@@ -16,7 +15,8 @@
 
                     <a class="dropdown-item" href="{% url 'account:password_change' %}">修改密码</a>
                     <a class="dropdown-item" href="{%  url 'account:logout' %}">退出登陆</a>
-                    <a class="dropdown-item" href="#">个人信息</a>
+                    <a class="dropdown-item" href="{% url 'BlogPost:PostManage' %}">后台管理</a>
+                    <!--<a class="dropdown-item" href="#">个人信息</a>-->
             </div>
         </li>
         {% else %}
@@ -29,4 +29,8 @@
         {% endif %}
     </ul>
         </div>
+    <script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/OwnCss.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
 </nav>

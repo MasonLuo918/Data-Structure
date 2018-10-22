@@ -3,8 +3,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,inital-scale=1,shrink-to-fit=no">
-    <title>Programmer Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Programmer</title>
     <!-- 新 Bootstrap4 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
 
@@ -27,31 +27,79 @@
     <link rel="stylesheet" href="{% static 'dist/css/swiper.min.css' %}">
     <script src="{% static 'dist/js/swiper.min.js' %}"></script>
     <!-- -->
-
+   <style>
+       body{
+         background-color: #FAFAFA;
+       }
+   </style>
 </head>
 <body>
-<div class="container-fluid">
-
-    <!-- swiper javascript-->
-     <script>
-    var swiper = new Swiper('.swiper-container', {
-      spaceBetween: 30,
-      centeredSlides: true,
-      autoplay: {
-        delay: 2500,
-        disableOnInteraction: false,
-      },
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
-  </script>
-    <!-- end swiper -->`
+<div class="container-fluid text-center">
+    {% include "nav3.html" %}
 </div>
+<div class="container text-center" style="margin-top:5px;background-color: white;">
+    <div class="row">
+     <div class="col-12 col-sm-12 col-md-9">
+    <div class="swiper-container" style="height: 400px">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="{% static 'Image/BackGround.Jpg' %}" width="100%" height="100%"> </div>
+        <div class="swiper-slide"><img src="{% static 'Image/RegisterBackground.gif' %}" width="100%" height="100%"> </div>
+        <div class="swiper-slide"><img src="{% static 'Image/logo.png' %}" width="100%" height="100%"> </div>
+    </div>
+    <!-- 如果需要分页器 -->
+    <div class="swiper-pagination"></div>
+
+    <!-- 如果需要导航按钮 -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+    <!-- 如果需要滚动条 -->
+    <div class="swiper-scrollbar"></div>
+    </div>
+    <div class="ArticleList">
+       <h5 class="text-left">最新发布</h5>
+        {% for article in Articles %}
+        <a href="{{ article.get_detail_url }}">
+            <div class="Article text-left">
+            <h4>{{ article.title }}</h4>
+            <div class="author_time">
+                <span><a href="#">{{ article.author.username }}</a> </span> | <span><a href="#">{{ article.publish_time }}</a> </span> | <span><a href="#">{{ article.column }}</a> </span>
+            </div>
+            <div class="abstract">
+                 <p>{{ article.abstract }}</p>
+                <hr>
+            </div>
+        </div>
+            </a>
+        {% empty %}
+        <div>暂时还没有文章发布~</div>
+        {% endfor %}
+        <div class="text-center MoreArticle">
+            <a href="#"><p>更多</p></a>
+        </div>
+    </div>
+ </div>
+ </div>
+</div>
+
+ <script>
+  var swiper = new Swiper('.swiper-container', {
+    spaceBetween: 30,
+    centeredSlides: true,
+    loop:true,
+    autoplay: {
+      delay: 2500,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+  });
+</script>
 </body>
 </html>
