@@ -19,9 +19,9 @@ class Post(models.Model):
     title = models.CharField(max_length=40)
     body = models.TextField()
     author = models.ForeignKey(User,related_name="UserPost")
-    column = models.ForeignKey(Column,related_name="Post_Column",default='')
+    column = models.ForeignKey(Column,related_name="Pospt_Column",default='')
     abstract = models.CharField(max_length=200,null=True)
-    publish_time = models.DateField(auto_now_add=True)
+    publish_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateField(auto_now=True)
     slug = models.SlugField(max_length=500,blank=True)
 

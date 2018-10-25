@@ -14,5 +14,7 @@ urlpatterns = [
     url(r'^edit_post/(?P<post_id>\d+)/$',BlogPost_views.edit_post,name="edit_post"),
     url(r'^PersonalInformations/$',BlogPost_views.PersonalInformations,name="PersonalInformations"),
     url(r'^EditInformations/$',BlogPost_views.EditInformations,name="EditInformations"),
+    url(r'^MyselfComments/$',BlogPost_views.MyComment,name="MyComment"),
+    url(r'^deleteComment/$',BlogPost_views.deleteComment,name="deleteComment"),
 
 ]

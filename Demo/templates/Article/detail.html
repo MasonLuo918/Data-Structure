@@ -36,7 +36,7 @@
             </header>
             <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.css' %}">
             <div id="editormd-view" style="padding:0;font-size:1.0rem;">
-                <textarea id="append-test" style="display: none;">
+                <textarea id="append-test" style="display: none;" required>
                     {{ Article.body }}
                 </textarea>
             </div>
@@ -46,6 +46,50 @@
         </div>
     </div>
 </div>
+{% if user.is_authenticated %}
+
+<div class="Comment row border">
+ <div class="new">
+    <textarea id="NewComment" class="NewComment" placeholder="&nbsp&nbsp请发表你的评论~">
+    </textarea>
+      <button type="button" class="btn btn-outline-info float-right" onclick="SubmitNewComment(this)">发表</button>
+  </div>
+</div>
+{% else %}
+<div class="text-center" style="width:100%;font-family: 华文新魏;font-size:1.2rem;"><a href="{% url 'account:login' %}">登录</a>后才能再评论哦 </div>
+{% endif %}
+<h5 class="border-dark text-center" style="width:100%;font-family: 华文新魏;font-size:1.6rem;">评论区</h5>
+    <div class="OldComment">
+        {% for comment in Comments %}
+        <div class="articleComment">
+          <p>{{ comment.user}} | {{ comment.comment_time|date }}</p>
+        <div class="text-left">
+            {{ comment.body }}
+        </div>
+            <a href="javascript:" onclick="apply(this,{{ comment.id }})">回复</a>
+        </div>
+        {% for item in comment.child_comment.all %}
+        <div class="childComment">
+          <p>{{ item.user}} | {{ item.comment_time|date }}</p>
+        <div class="text-left">
+            {{ item.body }}
+        </div>
+            <a href="javascript:" onclick="apply(this,{{ comment.id }})">回复</a>
+        </div>
+          <hr style="width:90%;margin:0 auto;">
+        {% endfor %}
+        <hr style="width:90%;margin:0 auto;">
+        {% endfor %}
+    </div>
+<!--<div id="SOHUCS" ></div>-->
+<!--<script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js" ></script>-->
+<!--<script type="text/javascript">-->
+<!--window.changyan.api.config({-->
+<!--appid: 'cytNoLI57',-->
+<!--conf: 'prod_40a299e26aa7f379e20bdcc5f8daa581'-->
+<!--});-->
+<!--</script>-->
+<script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
 <script type="text/javascript" src="{% static 'editor/lib/marked.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'editor/lib/prettify.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'editor/lib/raphael.min.js' %}"></script>
@@ -56,6 +100,8 @@
 <script type="text/javascript" src="{% static 'editor/editormd.js' %}"></script>
 
 <script type="text/javascript">
+
+    var is_activate=1;
 
     $(function () {
         editormd.markdownToHTML("editormd-view", {
@@ -68,5 +114,54 @@
         });
     });
 
+    function SubmitNewComment(the,boolean) {
+         var body=$("#NewComment").val();
+         var IsNewComment;
+         $.ajax({
+             type:"POST",
+             data:{"body":body,"IsNewComment":"True"},
+             url:"{% url 'Articleapp:ArticleDetail' Article_id ArticleSlug %}",
+             success:function (e) {
+                 if (e=="1"){
+
+                     layer.msg('评论成功',{time:1000},function () {
+                         window.location.reload();
+                     });
+                 }
+                 else
+                 {
+                     layer.msg("评论失败");
+                 }
+             },
+         });
+    }
+
+    function apply(the,Parent_id) {
+
+        if (is_activate==1) {
+            $(the).after("<div class='newChild'><textarea id='NewChildComment' class='NewChildComment' placeholder='&nbsp&nbsp请发表你的评论~'></textarea><button type='button' class='btn btn-outline-info float-right' onclick='SubmitNewChildComment(this," + Parent_id + ")'>发表</button></div>");
+            is_activate=0;
+        }
+    }
+
+    function SubmitNewChildComment(the,Parent_id) {
+        var body=$("#NewChildComment").val();
+        $.ajax({
+            type:"POST",
+            data:{"ParentCommentId":Parent_id,"body":body,"IsNewComment":"False"},
+             url:"{% url 'Articleapp:ArticleDetail' Article_id ArticleSlug %}",
+             success:function (e) {
+                 if (e=="1"){
+                     layer.msg('评论成功',{time:1000},function () {
+                         window.location.reload();
+                     });
+                 }
+                 else
+                 {
+                     layer.msg("评论失败");
+                 }
+             },
+        });
+    }
 </script>
 {% endblock %}

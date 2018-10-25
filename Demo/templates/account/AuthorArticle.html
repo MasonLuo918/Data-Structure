@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %} 文章管理 {% endblock %}
+{% block Style %}
+<link rel="stylesheet" href="{% static 'editor/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/editormd.css' %}">
+{% endblock %}
+{% block header %}
+<nav class="navbar navbar-expand-sm bg-dark">
+    <ul class="navbar-nav text-center" style="width:100%;">
+        <li class="nav-item">
+            <a href="/home"><img src="{% static 'Image/logo.png' %}" class="rounded-circle" width="40%"> </a>
+        </li>
+        <li class="nav-item dropdown">
+            <button class="btn btn-primary bg-white nav-link dropdown-toggle" data-toggle="dropdown"
+                    style="margin:0 auto;color:black;font-family: 华文新魏;font-size:1.2rem;">{{ user.username }}
+            </button>
+            <div class="dropdown-menu text-center">
+                <a class="dropdown-item" href="{% url 'account:password_change' %}">修改密码</a>
+                <a class="dropdown-item" href="{% url 'account:logout' %}">退出登陆</a>
+                <a class="dropdown-item" href="{% url 'BlogPost:PostManage' %}">后台管理</a>
+                <!--<a class="dropdown-item" href="#" onclick="functionDoesNotbuild()">个人信息</a>-->
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/home"><p>首页</p></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'BlogPost:PostManage' %}"><p>文章管理</p></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'BlogPost:ColumnManage' %}"><p>栏目管理</p></a>
+        </li>
+         <li class="nav-item">
+      <a class="nav-link" href="{% url 'BlogPost:PersonalInformations' %}"><p>个人信息</p></a>
+    </li>
+        <li class="nav-item">
+            <a class="nav-link" href="javascript:" onclick="functionDoesNotbuild()"><p>美图页面</p></a>
+        </li>
+    </ul>
+
+</nav>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row" style="margin-top:10px;">
+        <div class="left-side col-md-3 col-sm-12 col-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-dark table-hover " style="margin-top:10px;">
+                        <tbody>
+                        <tr>
+                            <td>用户名</td>
+                            <td>{{ user.username }}</td>
+                        </tr>
+                        <!--<tr>-->
+                            <!--<td>邮箱</td>-->
+                            <!--<td>{{ user.email }}</td>-->
+                        <!--</tr>-->
+                        <tr>
+                            <td>座右铭</td>
+                            <td>{{ userprofile.motto }}</td>
+                        </tr>
+                        <!--<tr>-->
+                            <!--<td>学校</td>-->
+                            <!--<td>{{ userprofile.School }}</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>手机号码</td>-->
+                            <!--<td>{{ userprofile.phone }}</td>-->
+                        <!--</tr>-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+         <div class="ArticleList col-md-7">
+       <h5 class="text-left">文章列表</h5>
+        {% for article in Articles %}
+        <a href="{{ article.get_detail_url }}">
+            <div class="Article text-left">
+            <h4>{{ article.title }}</h4>
+            <div class="author_time">
+                <span><a href="#">{{ article.author.username }}</a> </span> | <span><a href="#">{{ article.publish_time }}</a> </span> | <span><a href="#">{{ article.column }}</a> </span>
+            </div>
+            <div class="abstract">
+                 <p>{{ article.abstract }}</p>
+                <hr>
+            </div>
+        </div>
+            </a>
+        {% empty %}
+        <div>暂时还没有文章发布~</div>
+        {% endfor %}
+  {% include "paginator.html" %}
+    </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    function  EditInformations() {
+        var index=layer.open({
+            type:2,
+            content:"/BlogPost/EditInformations/",
+            area:["350px","400px"],
+        })
+    }
+</script>
+{% endblock %}

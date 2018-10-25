@@ -3,9 +3,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% block title %} {% endblock %}</title>
-	{% block Style %} {% endblock %}
+    <link rel="stylesheet" href="{% static 'css/media.css' %}">
     <!-- 新 Bootstrap4 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
 
@@ -33,7 +33,7 @@
     <script type="text/javascript" src="{% static 'js/OwnCss.js' %}"></script>
     <!-- end -->
     <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
-
+    <script type="text/javascript" src="{% static 'js/csrf.js' %}"></script>
 </head>
 <body>
 <div class="container-fluid">

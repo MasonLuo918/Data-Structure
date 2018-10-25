@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^BlogPost/',include("BlogPost.urls")),# import the BlogPost app
     url(r'^home/',Home_views.index,name="index"),
     url(r'^Article/',include("Articleapp.urls",namespace="Articleapp",app_name="Articleapp")),
+    url(r'^Comment/',include("comment.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

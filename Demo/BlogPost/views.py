@@ -7,6 +7,7 @@ from .models import Post,Column
 from account.models import Userprofile
 from account.forms import UserprofileForm
 from django.http import HttpResponse,HttpResponseRedirect
+from comment.models import Comments
 # Create your views here.
 
 @login_required(login_url='/account/login/')
@@ -141,3 +142,25 @@ def EditInformations(request):
             return HttpResponse("1")
         except:
             return HttpResponse("2")
+
+@login_required(login_url='/account/login/')
+@csrf_exempt
+def MyComment(request):
+    AllPost = Post.objects.all()
+    comments = []
+    for post in AllPost:
+        comments += Comments.objects.filter(Comment_article=post)
+    return render(request,"BlogPost/MyselfComment.html",{"comments":comments})
+
+@login_required(login_url='/account/login/')
+@csrf_exempt
+@require_POST
+def deleteComment(request):
+    comment_id = request.POST['comment_id']
+    try:
+      #  print(comment_id)
+        comment = Comments.objects.get(id=comment_id)
+        comment.delete()
+        return HttpResponse("1")
+    except:
+        return HttpResponse("2")
