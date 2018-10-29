@@ -175,3 +175,22 @@ hr { font-size:0px; line-height:0px; padding:0px; margin:0px; }
     width:100%;
     height:100px;
 }
+.Rightside ul{
+    list-style-type: none;
+}
+.Rightside {
+
+}
+.OtherArea
+{
+    width:100%;
+    font-family:宋体;
+    margin-top:10px;
+
+}
+.OtherArea a{
+    text-decoration: none;
+}
+.OtherArea li:hover{
+    background-color:#ffffec;
+}

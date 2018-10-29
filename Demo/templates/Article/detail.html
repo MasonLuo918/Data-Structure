@@ -4,15 +4,51 @@
 {{ Article.title }}
 {% endblock %}
 {% block content %}
+{% with total_likes=Article.users_like.count %}
+{% with total_read=Article.users_read.count %}
 <div class="container-fluid">
     {% include "nav3.html" %}
 </div>
 <div class="row text-left" style="margin-top:10px;">
-
     <div class="col-12 col-sm-12 col-md-3 border AuthorDetail text-center">
         <div class="author-name">{{ Article.author.username}}的其他文章</div>
         <div class="ArticleList">
             {% for article in Articles %}
+            {% if article != Article %}
+            <a href="{{ article.get_detail_url }}" style="color:black;font-family: 华文新魏;">
+                <div class="Article text-left">
+                    <div class="title">
+                        <h4>{{ article.title }}</h4>
+                    </div>
+                    <div class="author_time" style="color:#8F938F;">
+                        {{ article.author.username }} | {{ article.column }} | {{ article.publish_time }}
+                    </div>
+                </div>
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="author-name">点赞最多文章</div>
+        <div class="ArticleList">
+            {% for article in UserlikesMoreArticle %}
+            {% if article != Article %}
+            <a href="{{ article.get_detail_url }}" style="color:black;font-family: 华文新魏;">
+                <div class="Article text-left">
+                    <div class="title">
+                        <h4>{{ article.title }}</h4>
+                    </div>
+                    <div class="author_time" style="color:#8F938F;">
+                        {{ article.author.username }} | {{ article.column }} | {{ article.publish_time }}
+                    </div>
+                </div>
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="author-name">阅读最多文章</div>
+        <div class="ArticleList">
+            {% for article in UserReadsMoreArticle %}
             {% if article != Article %}
             <a href="{{ article.get_detail_url }}" style="color:black;font-family: 华文新魏;">
                 <div class="Article text-left">
@@ -32,7 +68,21 @@
         <div>
             <header>
                 <h2>{{ Article.title }}</h2>
-                <p>{{ Article.publish_time}} <a href="#">{{ Article.author.username }}</a> {{ Article.column }}</p>
+                <p>{{ Article.publish_time}} <a href="#">{{ Article.author.username }}</a> {{ Article.column }}
+                    {% if user.authenticated %}
+                    <a href="javascript:" onclick="like_article({{ Article.id}} , 'like')" class="fa fa-thumbs-o-up"
+                       style="font-size:1.2rem;"></a>
+                    <a href="javascript:" onclick="like_article({{ Article.id}},'unlike')" class="fa fa-thumbs-o-down"
+                       style="font-size:1.2rem;"></a>
+                    {% else %}
+                    <a href="javascript:" onclick="layer.msg('请先登录');" class="fa fa-thumbs-o-up"
+                       style="font-size:1.2rem;"></a>
+                    <a href="javascript:" onclick="layer.msg('请先登录');" class="fa fa-thumbs-o-down"
+                       style="font-size:1.2rem;"></a>
+                    {% endif %}
+                    <span class="fa fa-thumbs-up" style="margin-left:20px;color:green;">{{ total_likes }} like{{ total_likes | pluralize }}</span>
+                    <span class="fa fa-eye" style="margin-left:20px;color:green;">{{ total_read }} like{{ total_read | pluralize }}</span>
+                </p>
             </header>
             <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.css' %}">
             <div id="editormd-view" style="padding:0;font-size:1.0rem;">
@@ -49,38 +99,40 @@
 {% if user.is_authenticated %}
 
 <div class="Comment row border">
- <div class="new">
+    <div class="new">
     <textarea id="NewComment" class="NewComment" placeholder="&nbsp&nbsp请发表你的评论~">
     </textarea>
-      <button type="button" class="btn btn-outline-info float-right" onclick="SubmitNewComment(this)">发表</button>
-  </div>
+        <button type="button" class="btn btn-outline-info float-right" onclick="SubmitNewComment(this)">发表</button>
+    </div>
 </div>
 {% else %}
-<div class="text-center" style="width:100%;font-family: 华文新魏;font-size:1.2rem;"><a href="{% url 'account:login' %}">登录</a>后才能再评论哦 </div>
+<div class="text-center" style="width:100%;font-family: 华文新魏;font-size:1.2rem;"><a
+        href="{% url 'account:login' %}">登录</a>后才能再评论哦
+</div>
 {% endif %}
 <h5 class="border-dark text-center" style="width:100%;font-family: 华文新魏;font-size:1.6rem;">评论区</h5>
-    <div class="OldComment">
-        {% for comment in Comments %}
-        <div class="articleComment">
-          <p>{{ comment.user}} | {{ comment.comment_time|date }}</p>
+<div class="OldComment">
+    {% for comment in Comments %}
+    <div class="articleComment">
+        <p>{{ comment.user}} | {{ comment.comment_time|date }}</p>
         <div class="text-left">
             {{ comment.body }}
         </div>
-            <a href="javascript:" onclick="apply(this,{{ comment.id }})">回复</a>
-        </div>
-        {% for item in comment.child_comment.all %}
-        <div class="childComment">
-          <p>{{ item.user}} | {{ item.comment_time|date }}</p>
+        <a href="javascript:" onclick="apply(this,{{ comment.id }})">回复</a>
+    </div>
+    {% for item in comment.child_comment.all %}
+    <div class="childComment">
+        <p>{{ item.user}} | {{ item.comment_time|date }}</p>
         <div class="text-left">
             {{ item.body }}
         </div>
-            <a href="javascript:" onclick="apply(this,{{ comment.id }})">回复</a>
-        </div>
-          <hr style="width:90%;margin:0 auto;">
-        {% endfor %}
-        <hr style="width:90%;margin:0 auto;">
-        {% endfor %}
+        <a href="javascript:" onclick="apply(this,{{ comment.id }})">回复</a>
     </div>
+    <hr style="width:90%;margin:0 auto;">
+    {% endfor %}
+    <hr style="width:90%;margin:0 auto;">
+    {% endfor %}
+</div>
 <!--<div id="SOHUCS" ></div>-->
 <!--<script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js" ></script>-->
 <!--<script type="text/javascript">-->
@@ -101,7 +153,7 @@
 
 <script type="text/javascript">
 
-    var is_activate=1;
+    var is_activate = 1;
 
     $(function () {
         editormd.markdownToHTML("editormd-view", {
@@ -114,54 +166,74 @@
         });
     });
 
-    function SubmitNewComment(the,boolean) {
-         var body=$("#NewComment").val();
-         var IsNewComment;
-         $.ajax({
-             type:"POST",
-             data:{"body":body,"IsNewComment":"True"},
-             url:"{% url 'Articleapp:ArticleDetail' Article_id ArticleSlug %}",
-             success:function (e) {
-                 if (e=="1"){
+    function SubmitNewComment(the, boolean) {
+        var body = $("#NewComment").val();
+        var IsNewComment;
+        $.ajax({
+            type: "POST",
+            data: {"body": body, "IsNewComment": "True"},
+            url: "{% url 'Articleapp:ArticleDetail' Article_id ArticleSlug %}",
+            success: function (e) {
+                if (e == "1") {
 
-                     layer.msg('评论成功',{time:1000},function () {
-                         window.location.reload();
-                     });
-                 }
-                 else
-                 {
-                     layer.msg("评论失败");
-                 }
-             },
-         });
+                    layer.msg('评论成功', {time: 1000}, function () {
+                        window.location.reload();
+                    });
+                }
+                else {
+                    layer.msg("评论失败");
+                }
+            },
+        });
     }
 
-    function apply(the,Parent_id) {
+    function apply(the, Parent_id) {
 
-        if (is_activate==1) {
+        if (is_activate == 1) {
             $(the).after("<div class='newChild'><textarea id='NewChildComment' class='NewChildComment' placeholder='&nbsp&nbsp请发表你的评论~'></textarea><button type='button' class='btn btn-outline-info float-right' onclick='SubmitNewChildComment(this," + Parent_id + ")'>发表</button></div>");
-            is_activate=0;
+            is_activate = 0;
         }
     }
 
-    function SubmitNewChildComment(the,Parent_id) {
-        var body=$("#NewChildComment").val();
+    function SubmitNewChildComment(the, Parent_id) {
+        var body = $("#NewChildComment").val();
         $.ajax({
-            type:"POST",
-            data:{"ParentCommentId":Parent_id,"body":body,"IsNewComment":"False"},
-             url:"{% url 'Articleapp:ArticleDetail' Article_id ArticleSlug %}",
-             success:function (e) {
-                 if (e=="1"){
-                     layer.msg('评论成功',{time:1000},function () {
-                         window.location.reload();
-                     });
-                 }
-                 else
-                 {
-                     layer.msg("评论失败");
-                 }
-             },
+            type: "POST",
+            data: {"ParentCommentId": Parent_id, "body": body, "IsNewComment": "False"},
+            url: "{% url 'Articleapp:ArticleDetail' Article_id ArticleSlug %}",
+            success: function (e) {
+                if (e == "1") {
+                    layer.msg('评论成功', {time: 1000}, function () {
+                        window.location.reload();
+                    });
+                }
+                else {
+                    layer.msg("评论失败");
+                }
+            },
+        });
+    }
+
+    function like_article(artilce_id, action) {
+        $.ajax({
+            type: "POST",
+            data: {"ArticleId": artilce_id, "action": action},
+            url: "{% url 'Articleapp:like_article' %}",
+            success: function (e) {
+                if (e == "1") {
+                    layer.msg("谢谢点赞", {time: 500}, function () {
+                        window.location.reload();
+                    })
+                }
+                else {
+                    layer.msg("我会继续努力！", {time: 500}, function () {
+                        window.location.reload();
+                    })
+                }
+            },
         });
     }
 </script>
+{% endwith %}
+{% endwith %}
 {% endblock %}

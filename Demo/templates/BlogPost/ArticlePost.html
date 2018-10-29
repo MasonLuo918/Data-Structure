@@ -34,9 +34,9 @@
        <li class="nav-item">
       <a class="nav-link" href="{% url 'BlogPost:PersonalInformations' %}"><p>个人信息</p></a>
     </li>
-       <li class="nav-item">
-      <a class="nav-link" href="{% url 'BlogPost:MyComment' %}"><p>我的评论</p></a>
-    </li>
+       <!--<li class="nav-item">-->
+      <!--<a class="nav-link" href="{% url 'BlogPost:MyComment' %}"><p>我的评论</p></a>-->
+    <!--</li>-->
     <li class="nav-item">
       <a class="nav-link" href="javascript:" onclick="functionDoesNotbuild()"><p>美图页面</p></a>
     </li>
@@ -91,7 +91,7 @@
             height:640,
             syncScrolling:"single",
             path: "{% static 'editor/lib/' %}",
-            emoji:true,
+            emoji:true
         });
     });
 

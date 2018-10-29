@@ -44,8 +44,6 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide"><img src="{% static 'Image/BackGround.Jpg' %}" width="100%" height="100%">
                     </div>
-                    <div class="swiper-slide"><img src="{% static 'Image/RegisterBackground.gif' %}" width="100%"
-                                                   height="100%"></div>
                     <div class="swiper-slide"><img src="{% static 'Image/logo.png' %}" width="100%" height="100%"></div>
                 </div>
                 <!-- 如果需要分页器 -->
@@ -61,16 +59,24 @@
             <div class="ArticleList">
                 <h5 class="text-left">最新发布</h5>
                 {% for article in Articles %}
+                {% with total_likes=article.users_like.count %}
+                {% with total_read=article.users_read.count %}
                 <a href="{{ article.get_detail_url }}" style=" text-decoration:none;">
                     <div class="Article text-left">
                         <h4 style="color:black;">{{ article.title }}</h4>
                         <div class="author_time">
                             {% if user.is_authenticated %}
-                            <span><a href="{% url 'account:AuthorArticle' article.author.id %}">{{ article.author.username }}</a> </span> | <span><a href="#">{{ article.publish_time|date }}</a> </span>
+                            <span><a href="{% url 'account:AuthorArticle' article.author.id %}">{{ article.author.username }}</a> </span>
+                            | <span><a href="#">{{ article.publish_time|date }}</a>
+                             <span class="fa fa-thumbs-up" style="margin-left:20px;color:green;">{{ total_likes }} like{{ total_likes | pluralize }}</span>
+                              <span class="fa fa-eye" style="margin-left:20px;color:green;">{{ total_read }} like{{ total_read | pluralize }}</span></span>
                             | <span><a href="#">{{ article.column }}</a> </span>
                             {% else %}
-                            <span><a href="javascript:" onclick="you_should_login()">{{ article.author.username }}</a> </span> | <span><a href="#">{{ article.publish_time|date }}</a> </span>
+                            <span><a href="javascript:" onclick="you_should_login()">{{ article.author.username }}</a> </span>
+                            | <span><a href="#">{{ article.publish_time|date }}</a> </span>
                             | <span><a href="#">{{ article.column }}</a> </span>
+                            <span class="fa fa-thumbs-up" style="margin-left:20px;color:green;">{{ total_likes }} like{{ total_likes | pluralize }}</span>
+                            <span class="fa fa-eye" style="margin-left:20px;color:green;">{{ total_read }} like{{ total_read | pluralize }}</span></span>
                             {% endif %}
                         </div>
                         <div class="abstract">
@@ -79,6 +85,8 @@
                         </div>
                     </div>
                 </a>
+                {% endwith %}
+                {% endwith %}
                 {% empty %}
                 <div>暂时还没有文章发布~</div>
                 {% endfor %}
@@ -86,6 +94,45 @@
                 <div class="text-center MoreArticle">
                     <a href="#"><p>更多</p></a>
                 </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12 col-12 Rightside border">
+            <div class="OtherArea text-left">
+                <h5><span class="fa fa-blind"></span>点赞最多的文章</h5>
+                <ul>
+                    {% for item in UserlikesMoreArticle %}
+                    <a href="{{ item.get_detail_url }}">
+                        <li>{{ item.title }}
+                            <p><span class="fa fa-thumbs-up">{{ item.users_like.count}} like{{ item.users_like.count| pluralize}}</span>
+                            </p>
+                        </li>
+                    </a>
+                    　{% endfor %}
+                </ul>
+                <hr>
+            </div>
+            <div class="OtherArea text-left">
+                <h5><span class="fa fa-blind"></span>阅读最多的文章</h5>
+                <ul>
+                    {% for item in UserReadsMoreArticle %}
+                    <a href="{{ item.get_detail_url }}">
+                        <li>{{ item.title }}
+                            <p><span class="fa fa-eye">{{ item.users_read.count}} read{{ item.users_read.count| pluralize}}</span>
+                            </p>
+                        </li>
+                    </a>
+                    　{% endfor %}
+                </ul>
+                <hr>
+            </div>
+            <div class="OtherArea text-left">
+                <h5><span class="fa fa-blind"></span>栏目</h5>
+                <div>
+                    {% for item in Column %}
+                    <button class="btn btn-primary btn-lg" style="color:white;margin:10px;">{{ item.column }}</button>
+                    {% endfor %}
+                </div>
+                <hr>
             </div>
         </div>
     </div>

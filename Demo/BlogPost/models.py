@@ -24,6 +24,8 @@ class Post(models.Model):
     publish_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateField(auto_now=True)
     slug = models.SlugField(max_length=500,blank=True)
+    users_like = models.ManyToManyField(User,related_name="articles_like",blank=True)
+    users_read = models.ManyToManyField(User,related_name="artilces_read",blank=True)
 
     def __str__(self):
         return "%s-%s" % (self.author.username,self.title)
